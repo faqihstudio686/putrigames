@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pink Love Adventure | Putri</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --pink: #ff5b9e;
+  --deep: #b83e79;
+  --soft: #fff0f7;
+  --purple: #c9a0ff;
+}
+
+body {
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  min-height: 100vh;
+  color: #8d4169;
+  background: linear-gradient(135deg, #ffe6f1, #f6e5ff, #fff4f9);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: -2;
+  background: conic-gradient(
+    #ffb7d7, #f6d6ff, #fff1f7, #e8d8ff, #ffb7d7
+  );
+  filter: blur(90px);
+  opacity: .65;
+  animation: rotateBg 18s linear infinite;
+}
+
+@keyframes rotateBg {
+  to { transform: rotate(360deg); }
+}
+
+#particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  bottom: -30px;
+  color: #ff6fae;
+  opacity: .65;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-115vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.screen {
+  display: none;
+  min-height: 100vh;
+  width: 100%;
+  padding: 22px 16px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  animation: enter .5s ease;
+}
+
+.screen.active {
+  display: flex;
+}
+
+@keyframes enter {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  width: 100%;
+  max-width: 430px;
+  padding: 27px 21px;
+  border-radius: 27px;
+  background: rgba(255,255,255,.73);
+  border: 1px solid white;
+  box-shadow: 0 15px 50px #d76a9e24;
+  backdrop-filter: blur(16px);
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 13px;
+  margin-bottom: 16px;
+  background: #ffe1ee;
+  color: #d44e8d;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  border-radius: 30px;
+}
+
+h1 {
+  color: #d9478b;
+  font-size: clamp(27px, 7vw, 39px);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+h2 {
+  color: #d9478b;
+  font-size: 25px;
+  margin-bottom: 12px;
+}
+
+p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #925c7b;
+}
+
+.hero {
+  font-size: 76px;
+  margin: 12px 0 20px;
+  display: inline-block;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-12px) rotate(4deg); }
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:active {
+  transform: scale(.95);
+}
+
+.primary {
+  width: 100%;
+  margin-top: 22px;
+  padding: 15px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #ff579f, #d889ed);
+  box-shadow: 0 8px 22px #f17bb644;
+}
+
+.primary:hover {
+  box-shadow: 0 10px 28px #f17bb677;
+  transform: translateY(-2px);
+}
+
+.note {
+  margin-top: 16px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  opacity: .7;
+}
+
+/* DASHBOARD */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.coin {
+  background: white;
+  padding: 9px 12px;
+  border-radius: 30px;
+  color: #d44e8d;
+  box-shadow: 0 4px 15px #d76a9e20;
+}
+
+.map {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.level {
+  min-height: 125px;
+  border-radius: 19px;
+  background: linear-gradient(145deg, #fff, #ffe8f3);
+  border: 1px solid #ffcee2;
+  padding: 15px 9px;
+  color: #a14b78;
+  box-shadow: 0 6px 16px #d76a9e14;
+}
+
+.level .icon {
+  display: block;
+  font-size: 34px;
+  margin-bottom: 9px;
+}
+
+.level strong {
+  font-size: 13px;
+}
+
+.level small {
+  display: block;
+  margin-top: 6px;
+  font-size: 10px;
+}
+
+.level.locked {
+  filter: grayscale(.4);
+  opacity: .55;
+}
+
+.level:not(.locked):hover {
+  transform: translateY(-3px);
+}
+
+/* QUEST */
+
+.quest-icon {
+  font-size: 58px;
+  margin: 12px;
+  animation: bounce 2s infinite;
+}
+
+.progress {
+  height: 8px;
+  background: #f6c8dd;
+  border-radius: 20px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #ff5b9e, #c48aff);
+  transition: width .3s;
+}
+
+.arena {
+  width: 100%;
+  height: 330px;
+  margin-top: 15px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid white;
+  background: linear-gradient(160deg, #ffe8f3, #f3ddff);
+  touch-action: manipulation;
+}
+
+.arena::before {
+  content: "TAP THE HEARTS";
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: #d78ab1;
+  pointer-events: none;
+}
+
+.target {
+  position: absolute;
+  background: transparent;
+  font-size: 33px;
+  padding: 5px;
+  animation: pop .25s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* DOOR */
+
+.door {
+  width: 140px;
+  height: 185px;
+  margin: 20px auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 5px solid #ffb6d5;
+  border-radius: 75px 75px 12px 12px;
+  background: linear-gradient(150deg, #ffadd0, #e9b5ff);
+  box-shadow: 0 12px 25px #d76a9e33;
+  animation: doorGlow 2s infinite alternate;
+}
+
+@keyframes doorGlow {
+  from { box-shadow: 0 0 15px #ffadd066; }
+  to { box-shadow: 0 0 35px #e6a5ffbb; }
+}
+
+.door span {
+  font-size: 55px;
+}
+
+.door small {
+  font-weight: bold;
+  color: white;
+  margin-top: 10px;
+}
+
+/* LETTER */
+
+.letter {
+  background: #fff5fa;
+  border: 1px solid #ffdeed;
+  border-radius: 18px;
+  padding: 18px;
+  text-align: left;
+  line-height: 1.9;
+  font-size: 14px;
+  color: #925c7b;
+  min-height: 130px;
+  white-space: pre-wrap;
+}
+
+.signature {
+  margin-top: 16px;
+  text-align: right;
+  font-weight: bold;
+  color: #d9478b;
+}
+
+.ending-hearts {
+  font-size: 26px;
+  margin: 15px 0;
+  animation: bounce 2s infinite;
+}
+
+@media(max-height: 700px) {
+  .screen { padding: 12px; }
+  .card { padding: 21px 17px; }
+  .arena { height: 280px; }
+  .hero { font-size: 57px; margin: 5px 0 12px; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="particles"></div>
+
+<!-- PEMBUKA -->
+<section class="screen active" id="home">
+  <div class="card">
+    <span class="badge">A LITTLE WORLD FOR YOU</span>
+    <div class="hero">🌷</div>
+    <h1>Pink Love<br>Adventure</h1>
+    <p>
+      Welcome, Putri!<br>
+      Ana petualangan cilik sing wis disiapake khusus kanggo kowe.
+      Rampungna saben misi kanggo mbukak hadiah rahasia. 💗
+    </p>
+    <button class="primary" onclick="startAdventure()">
+      Mulai Petualangan ✨
+    </button>
+    <div class="note">CHAPTER 01 · THE PINK WORLD</div>
+  </div>
+</section>
+
+<!-- DUNIA GAME -->
+<section class="screen" id="world">
+  <div class="card">
+    <div class="topbar">
+      <span>🌸 PINK WORLD</span>
+      <span class="coin">💎 <span id="coins">0</span></span>
+    </div>
+
+    <h2>Halo, Putri!</h2>
+    <p>
+      Jelajahi dunia iki lan kumpulna ati kanggo mbukak
+      lawang rahasia.
+    </p>
+
+    <div class="map">
+      <button class="level" onclick="openQuest()">
+        <span class="icon">💗</span>
+        <strong>Level 01</strong>
+        <small>Heart Catcher</small>
+      </button>
+
+      <button class="level locked" id="level2" onclick="openQuiz()">
+        <span class="icon">🌷</span>
+        <strong>Level 02</strong>
+        <small id="level2Status">🔒 Dikunci</small>
+      </button>
+
+      <button class="level locked" id="level3" onclick="openDoor()">
+        <span class="icon">🚪</span>
+        <strong>Level 03</strong>
+        <small id="level3Status">🔒 Dikunci</small>
+      </button>
+
+      <button class="level locked" id="level4" onclick="openLetter()">
+        <span class="icon">💌</span>
+        <strong>Final Reward</strong>
+        <small id="level4Status">🔒 Dikunci</small>
+      </button>
+    </div>
+
+    <button class="primary" onclick="openQuest()">
+      Main Misi Saiki 🎮
+    </button>
+  </div>
+</section>
+
+<!-- MISI NANGKEP ATI -->
+<section class="screen" id="quest">
+  <div class="card">
+    <span class="badge">LEVEL 01 · HEART CATCHER</span>
+    <h2>Tangkap Ati! 💗</h2>
+    <p>Tangkap 10 ati sadurunge wektu entek.</p>
+
+    <div class="status">
+      <span>💖 Skor: <b id="score">0</b>/10</span>
+      <span>⏱️ Wektu: <b id="time">25</b>s</span>
+    </div>
+
+    <div class="arena" id="arena"></div>
+
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
+
+    <p style="margin-top:12px;font-size:11px">
+      Tap ati sing muncul nang arena kanggo entuk koin!
+    </p>
+
+    <button class="primary" onclick="backToWorld()">
+      Bali menyang Pink World
+    </button>
+  </div>
+</section>
+
+<!-- HASIL MISI -->
+<section class="screen" id="questResult">
+  <div class="card">
+    <div class="hero" id="resultIcon">🏆</div>
+    <h1 id="resultTitle">Misi Rampung!</h1>
+    <p id="resultText"></p>
+    <button class="primary" onclick="backToWorld()">
+      Bali menyang Dunia Game
+    </button>
+  </div>
+</section>
+
+<!-- TANTANGAN -->
+<section class="screen" id="quiz">
+  <div class="card">
+    <span class="badge">LEVEL 02 · LITTLE CHALLENGE</span>
+    <div class="hero">🌷</div>
+    <h2>Pilih Jawabanmu</h2>
+    <p>
+      Menurutmu, apa sing paling nggawe hadiah dadi berkesan?
+    </p>
+
+    <button class="choice-btn level" style="width:100%;margin-top:12px"
+      onclick="chooseAnswer(this, false)">
+      🎁 Hadiah sing larang
+    </button>
+
+    <button class="choice-btn level" style="width:100%;margin-top:12px"
+      onclick="chooseAnswer(this, true)">
+      💗 Perhatian lan ketulusan
+    </button>
+
+    <button class="choice-btn level" style="width:100%;margin-top:12px"
+      onclick="chooseAnswer(this, false)">
+      ✨ Hadiah sing mewah
+    </button>
+
+    <p id="quizFeedback" style="margin-top:14px;min-height:25px"></p>
+
+    <button class="primary" id="quizContinue"
+      style="display:none" onclick="backToWorld()">
+      Lanjut Petualangan ✨
+    </button>
+
+    <button class="primary" onclick="backToWorld()">
+      Bali
+    </button>
+  </div>
+</section>
+
+<!-- LAWANG RAHASIA -->
+<section class="screen" id="door">
+  <div class="card">
+    <span class="badge">LEVEL 03 · MYSTERY DOOR</span>
+    <h2>Lawang Rahasia</h2>
+    <p>
+      Kowe wis nglumpukake cukup ati.
+      Saiki bukak lawang iki kanggo nemokake hadiahmu.
+    </p>
+
+    <div class="door" id="doorGraphic">
+      <span>🔐</span>
+      <small>SECRET ROOM</small>
+    </div>
+
+    <p id="doorText">Pencet tombol kanggo mbukak lawang.</p>
+
+    <button class="primary" id="openDoorBtn" onclick="unlockDoor()">
+      Bukak Lawang 💗
+    </button>
+
+    <button class="primary" onclick="backToWorld()">
+      Bali
+    </button>
+  </div>
+</section>
+
+<!-- PESEN RAHASIA -->
+<section class="screen" id="letter">
+  <div class="card">
+    <span class="badge">FINAL REWARD · UNLOCKED</span>
+    <div class="hero">💌</div>
+    <h1>Kanggo Putri</h1>
+
+    <div class="letter" id="letterText"></div>
+    <div class="signature" id="signature"></div>
+
+    <button class="primary" id="finishBtn"
+      style="display:none" onclick="showScreen('ending')">
+      Rampungna Petualangan 🌸
+    </button>
+
+    <button class="primary" onclick="backToWorld()">
+      Bali menyang Dunia Game
+    </button>
+  </div>
+</section>
+
+<!-- ENDING -->
+<section class="screen" id="ending">
+  <div class="card">
+    <span class="badge">ADVENTURE COMPLETED</span>
+    <div class="hero">🎉</div>
+    <h1>Congratulations!</h1>
+    <p>
+      Putri wis ngrampungake kabeh petualangan.
+      Muga-muga game cilik iki bisa nggawe kowe mesem.
+      Tetep semangat lan aja lali bahagia, ya! 💗
+    </p>
+
+    <div class="ending-hearts">💗 💕 💗</div>
+
+    <button class="primary" onclick="restartGame()">
+      Main Maneh ↻
+    </button>
+    <div class="note">MADE WITH CARE · FOR PUTRI</div>
+  </div>
+</section>
+
+<script>
+/* PARTIKEL LATAR */
+const particleBox = document.getElementById("particles");
+
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement("span");
+  p.className = "particle";
+  p.textContent = ["♡", "✦", "✧", "♥"][Math.floor(Math.random() * 4)];
+  p.style.left = Math.random() * 100 + "%";
+  p.style.fontSize = (12 + Math.random() * 18) + "px";
+  p.style.animationDuration = (7 + Math.random() * 12) + "s";
+  p.style.animationDelay = (-Math.random() * 15) + "s";
+  particleBox.appendChild(p);
+}
+
+/* SISTEM HALAMAN */
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => {
+    s.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+}
+
+let coins = 0;
+let questComplete = false;
+let quizComplete = false;
+let doorComplete = false;
+
+function startAdventure() {
+  showScreen("world");
+}
+
+function backToWorld() {
+  showScreen("world");
+  updateLevels();
+}
+
+function updateCoins() {
+  document.getElementById("coins").textContent = coins;
+}
+
+function updateLevels() {
+  if (questComplete) {
+    document.getElementById("level2").classList.remove("locked");
+    document.getElementById("level2Status").textContent = "✓ Bisa dibukak";
+  }
+
+  if (quizComplete) {
+    document.getElementById("level3").classList.remove("locked");
+    document.getElementById("level3Status").textContent = "✓ Bisa dibukak";
+  }
+
+  if (doorComplete) {
+    document.getElementById("level4").classList.remove("locked");
+    document.getElementById("level4Status").textContent = "✓ Hadiah siap";
+  }
+}
+
+/* GAME NANGKEP ATI */
+let score = 0;
+let timeLeft = 25;
+let running = false;
+let timerInterval = null;
+let spawnInterval = null;
+
+function openQuest() {
+  score = 0;
+  timeLeft = 25;
+  running = true;
+
+  document.getElementById("score").textContent = score;
+  document.getElementById("time").textContent = timeLeft;
+  document.getElementById("progressBar").style.width = "0%";
+  document.getElementById("arena").innerHTML = "";
+
+  clearInterval(timerInterval);
+  clearInterval(spawnInterval);
+
+  showScreen("quest");
+  spawnHeart();
+
+  spawnInterval = setInterval(spawnHeart, 650);
+
+  timerInterval = setInterval(() => {
+    if (!running) return;
+
+    timeLeft--;
+    document.getElementById("time").textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      finishQuest(false);
+    }
+  }, 1000);
+}
+
+function spawnHeart() {
+  if (!running) return;
+
+  const arena = document.getElementById("arena");
+  const heart = document.createElement("button");
+  heart.className = "target";
+  heart.textContent = ["💗", "💖", "💕", "💘"][
+    Math.floor(Math.random() * 4)
+  ];
+
+  const maxX = Math.max(0, arena.clientWidth - 55);
+  const maxY = Math.max(40, arena.clientHeight - 55);
+
+  heart.style.left = Math.random() * maxX + "px";
+  heart.style.top = (35 + Math.random() * (maxY - 35)) + "px";
+
+  heart.onclick = () => {
+    if (!running) return;
+
+    score++;
+    coins++;
+    document.getElementById("score").textContent = score;
+    document.getElementById("coins").textContent = coins;
+
+    document.getElementById("progressBar").style.width =
+      Math.min(score * 10, 100) + "%";
+
+    heart.textContent = "+1";
+    heart.style.fontSize = "18px";
+    heart.style.color = "#d9468c";
+
+    setTimeout(() => heart.remove(), 100);
+
+    if (score >= 10) {
+      finishQuest(true);
+    }
+  };
+
+  arena.appendChild(heart);
+
+  setTimeout(() => {
+    if (heart.isConnected) heart.remove();
+  }, 1600);
+}
+
+function finishQuest(won) {
+  if (!running) return;
+
+  running = false;
+  clearInterval(timerInterval);
+  clearInterval(spawnInterval);
+
+  document.getElementById("arena").innerHTML = "";
+
+  if (won) {
+    questComplete = true;
+    document.getElementById("resultIcon").textContent = "🏆";
+    document.getElementById("resultTitle").textContent = "Level Complete!";
+    document.getElementById("resultText").textContent =
+      "Hebat, Putri! Kowe entuk " + score +
+      " ati lan wis mbukak Level 02. Ayo lanjut!";
+  } else {
+    document.getElementById("resultIcon").textContent = "💗";
+    document.getElementById("resultTitle").textContent = "Coba Maneh!";
+    document.getElementById("resultText").textContent =
+      "Skormu " + score + ". Butuh 10 ati kanggo ngrampungake misi. " +
+      "Tenang, kowe bisa nyoba maneh!";
+  }
+
+  showScreen("questResult");
+  updateLevels();
+}
+
+/* LEVEL 02 */
+function openQuiz() {
+  if (!questComplete) {
+    alert("Rampungna Level 01 dhisik, ya! 💗");
+    return;
+  }
+
+  showScreen("quiz");
+}
+
+function chooseAnswer(button, correct) {
+  if (quizComplete) return;
+
+  if (correct) {
+    quizComplete = true;
+    coins += 5;
+    updateCoins();
+
+    document.getElementById("quizFeedback").textContent =
+      "Bener! Ketulusan kuwi sing paling penting. 💗";
+
+    document.getElementById("quizContinue").style.display = "block";
+
+    document.querySelectorAll(".choice-btn").forEach(btn => {
+      btn.disabled = true;
+      btn.style.opacity = ".65";
+    });
+
+    button.style.background = "#ffd2e6";
+    updateLevels();
+  } else {
+    document.getElementById("quizFeedback").textContent =
+      "Durung pas, Putri. Coba pikirna maneh. 🌷";
+
+    button.style.background = "#ffe3ef";
+  }
+}
+
+/* LAWANG RAHASIA */
+function openDoor() {
+  if (!quizComplete) {
+    alert("Rampungna Level 02 dhisik! 🌷");
+    return;
+  }
+
+  showScreen("door");
+}
+
+function unlockDoor() {
+  if (doorComplete) {
+    openLetter();
+    return;
+  }
+
+  doorComplete = true;
+
+  document.getElementById("doorGraphic").innerHTML =
+    "<span>💖</span><small>UNLOCKED!</small>";
+
+  document.getElementById("doorText").textContent =
+    "Lawang wis kebukak! Hadiah rahasiamu wis siap.";
+
+  document.getElementById("openDoorBtn").textContent =
+    "Deleng Hadiah 💌";
+
+  document.getElementById("openDoorBtn").onclick = openLetter;
+
+  updateLevels();
+}
+
+/* PESEN RAHASIA */
+let typingTimer = null;
+
+function openLetter() {
+  if (!doorComplete) {
+    alert("Bukak lawang rahasia dhisik, ya! 💗");
+    return;
+  }
+
+  showScreen("letter");
+  typeMessage();
+}
+
+function typeMessage() {
+  clearTimeout(typingTimer);
+
+  const message =
+    "Hai, Putri! 💗\n\n" +
+    "Matur nuwun wis main game cilik iki nganti rampung. " +
+    "Game iki pancen sederhana, nanging aku nggawe kanthi niat sing apik.\n\n" +
+    "Aku mung pengin menehi sesuatu sing beda lan nggawe kowe mesem. " +
+    "Muga-muga dina-dinamu kebak kabungahan, akeh perkara apik, " +
+    "lan tansah diwenehi semangat kanggo nggayuh apa sing mbok karepake.\n\n" +
+    "Tetep dadi Putri sing ceria, ya. 🌷";
+
+  const output = document.getElementById("letterText");
+  const signature = document.getElementById("signature");
+  const finish = document.getElementById("finishBtn");
+
+  output.textContent = "";
+  signature.textContent = "";
+  finish.style.display = "none";
+
+  let index = 0;
+
+  function typeNext() {
+    if (index < message.length) {
+      output.textContent += message.charAt(index);
+      index++;
+
+      typingTimer = setTimeout(typeNext, 32);
+    } else {
+      signature.textContent = "— Saka aku, kanggo Putri ♡";
+      finish.style.display = "block";
+    }
+  }
+
+  typeNext();
+}
+
+/* MAIN MANEH */
+function restartGame() {
+  clearInterval(timerInterval);
+  clearInterval(spawnInterval);
+  clearTimeout(typingTimer);
+
+  score = 0;
+  timeLeft = 25;
+  coins = 0;
+  running = false;
+  questComplete = false;
+  quizComplete = false;
+  doorComplete = false;
+
+  document.getElementById("coins").textContent = "0";
+  document.getElementById("quizFeedback").textContent = "";
+  document.getElementById("quizContinue").style.display = "none";
+
+  document.querySelectorAll(".choice-btn").forEach(btn => {
+    btn.disabled = false;
+    btn.style.opacity = "1";
+    btn.style.background = "";
+  });
+
+  document.getElementById("doorGraphic").innerHTML =
+    "<span>🔐</span><small>SECRET ROOM</small>";
+
+  document.getElementById("doorText").textContent =
+    "Pencet tombol kanggo mbukak lawang.";
+
+  document.getElementById("openDoorBtn").textContent =
+    "Bukak Lawang 💗";
+
+  document.getElementById("openDoorBtn").onclick = unlockDoor;
+
+  updateLevels();
+  showScreen("home");
+}
+</script>
+
+</body>
+</html>
